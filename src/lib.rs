@@ -37,7 +37,7 @@ fn get_table(mut table: Table, float_row: usize, is_le: bool) -> Table {
         }
         table.table.push_row(constr.view()).expect("Somehow matrix dimensions are incompatible?");
         last_rows_swap(&mut table);
-        table.base_var.insert(table.base_var.len() - 1,
+        table.supp_var.insert(table.supp_var.len() - 1,
             (table.base_var.len() + table.supp_var.len() - 1).to_string());
         table
 }
@@ -79,7 +79,7 @@ pub fn bnb_optimise(mut table: Table) -> Result<Table, SimplexError> {
         let le_result = bnb_optimise(le_table);
 
         info!("Making >= table");
-        let ge_table = get_table(table.clone(), float, false);
+        let ge_table = get_table(table, float, false);
         info!(">= table constructed:\n{}", ge_table);
         let ge_result = bnb_optimise(ge_table);
         return choose_table(le_result, ge_result);
